@@ -1,0 +1,2 @@
+juan pablo Garces;juanpg;12345;12345;12345678;juanp@gmail.com;text() + ";";text() + ";";text() + ";";text() + ";";text() + ";";text() + ";"
+juan pablo Garces;juanpg;12345;12345;12345678;juanp@gmail.com;text() + ";";text() + ";";text() + ";";text() + ";";text() + ";";text() + ";"

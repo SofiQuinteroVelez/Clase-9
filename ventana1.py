@@ -239,8 +239,8 @@ class Ventana1(QMainWindow):
     def accion_botonLimpiar(self):
         self.nombreCompleto.setText(' ')
         self.usuario.setText(' ')
-        self.password.setText(' ')
-        self.password2.setText(' ')
+        self.password.setText('')
+        self.password2.setText('')
         self.documento.setText(' ')
         self.correo.setText(' ')
         self.pregunta1.setText(' ')
@@ -253,7 +253,7 @@ class Ventana1(QMainWindow):
 
     def accion_botonRegistrar(self):
         pass
-    
+
 if __name__ == '__main__':
 
     app = QApplication(sys.argv)

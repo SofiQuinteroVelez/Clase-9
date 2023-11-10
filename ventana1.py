@@ -2,8 +2,9 @@ import sys
 
 from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QLabel, QHBoxLayout, QApplication, QFormLayout, QLineEdit, \
-    QPushButton, QDialog
+    QPushButton, QDialog, QDialogButtonBox, QVBoxLayout
 from PyQt5 import QtGui, QtCore
+from PyQt5.QtCore import Qt
 
 
 class Ventana1(QMainWindow):
@@ -252,8 +253,94 @@ class Ventana1(QMainWindow):
 
 
     def accion_botonRegistrar(self):
-        pass
-    
+
+        self.ventanaDialogo = QDialog(None, QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint)
+
+        self.ventanaDialogo.resize(300, 150)
+
+        self.botonAceptar = QDialogButtonBox.Ok
+        self.opciones = QDialogButtonBox(self.botonAceptar)
+        self.opciones.accepted.connect(self.ventanaDialogo.accept)
+
+        self.ventanaDialogo.setWindowTitle("Formulario de Registro")
+
+        self.ventanaDialogo.setWindowModality(Qt.ApplicationModal)
+
+        self.vertical = QVBoxLayout()
+
+        self.mensaje = QLabel("")
+
+        self.mensaje.setStyleSheet("background-color: #008B45; color: #FFFFFF; padding: 10px;")
+
+        self.vertical.addWidget(self.mensaje)
+
+        self.vertical.addWidget(self.opciones)
+
+        self.ventanaDialogo.setLayout(self.vertical)
+
+        self.datosCorrectos = True
+
+        if (
+                self.password.text() != self.password2.text()
+        ):
+            self.datosCorrectos = False
+
+            self.mensaje.setText("Los passwords no son iguales")
+
+            self.ventanaDialogo.exec_()
+
+        if (
+                self.nombreCompleto.text() == ""
+                or self.usuario.text() == ""
+                or self.password.text() == ""
+                or self.password2.text() == ""
+                or self.documento.text() == ""
+                or self.correo.text() == ""
+                or self.pregunta1.text() == ""
+                or self.respuesta1.text() == ""
+                or self.pregunta2.text() == ""
+                or self.respuesta2.text() == ""
+                or self.pregunta3.text() == ""
+                or self.respuesta3.text() == ""
+        ):
+            self.datosCorrectos = False
+
+            self.mensaje.setText("Debe ingresar todos los campos")
+
+            self.ventanaDialogo.exec_()
+
+        if self.datosCorrectos:
+
+            self.file = open('datos/clientes.txt', 'ab')
+
+            self.file.write(bytes(
+                self.nombreCompleto.text() + ";"
+                + self.usuario.text() + ";"
+                + self.password.text() + ";"
+                + self.password2.text() + ";"
+                + self.documento.text() + ";"
+                + self.correo.text() + ";"
+                + self.pregunta1.text() + ";"
+                + self.respuesta1.text() + ";"
+                + self.pregunta2.text() + ";"
+                + self.respuesta2.text() + ";"
+                + self.pregunta3.text() + ";"
+                + self.respuesta3.text() + "\n"
+                ,encoding='UTF-8'))
+
+            self.file.close()
+
+            self.file = open('datos/clientes.txt', 'rb')
+
+            while self.file:
+                linea = self.file.readline().decode('UTF-8')
+                print(linea)
+                if linea == '':
+                    break
+            self.file.close()
+
+
+
 if __name__ == '__main__':
 
     app = QApplication(sys.argv)

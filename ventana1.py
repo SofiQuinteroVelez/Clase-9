@@ -3,12 +3,19 @@ import sys
 
 from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QLabel, QHBoxLayout, QApplication, QFormLayout, QLineEdit, \
+<<<<<<< HEAD
    QPushButton, QDialog, QDialogButtonBox, QVBoxLayout
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtCore import Qt
 from cliente import Cliente
 
 
+=======
+    QPushButton, QDialog, QDialogButtonBox, QVBoxLayout
+from PyQt5 import QtGui, QtCore
+from PyQt5.QtCore import Qt
+from cliente import Cliente
+>>>>>>> 8e129cff53de6231446064b162917196048f79bf
 
 
 class Ventana1(QMainWindow):
@@ -155,6 +162,7 @@ class Ventana1(QMainWindow):
                                        "padding: 10px;"
                                        "margin-top: 40px;")
 
+<<<<<<< HEAD
 
        self.botonLimpiar.clicked.connect(self.accion_botonLimpiar)
 
@@ -705,6 +713,220 @@ class Ventana1(QMainWindow):
 
 
 
+=======
+        self.botonBuscar.clicked.connect(self.accion_botonBuscar)
+
+        self.botonRecuperar = QPushButton("Recuperar")
+        self.botonRecuperar.setFixedWidth(90)
+        self.botonRecuperar.setStyleSheet("background-color: #008B45;"
+                                            "color: #FFFFFF;"
+                                            "padding: 10px;"
+                                            "margin-top: 40px;")
+
+        self.ladoDerecho.addRow(self.botonBuscar, self.botonRecuperar)
+
+        self.horizontal.addLayout(self.ladoDerecho)
+
+        self.horizontal.addLayout(self.ladoDerecho)
+
+        # ---------- FINAL---------
+        #el layout principal del fondo es horizontal
+        self.fondo.setLayout(self.horizontal)
+
+        self.ventanaDialogo = QDialog(None, QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint)
+
+        self.ventanaDialogo.resize(300, 150)
+
+        self.botonAceptar = QDialogButtonBox.Ok
+        self.opciones = QDialogButtonBox(self.botonAceptar)
+        self.opciones.accepted.connect(self.ventanaDialogo.accept)
+
+        self.ventanaDialogo.setWindowTitle("Formulario de Registro")
+
+        self.ventanaDialogo.setWindowModality(Qt.ApplicationModal)
+
+        self.vertical = QVBoxLayout()
+
+        self.mensaje = QLabel("")
+
+        self.mensaje.setStyleSheet("background-color: #008B45; color: #FFFFFF; padding: 10px;")
+
+        self.vertical.addWidget(self.mensaje)
+
+        self.vertical.addWidget(self.opciones)
+
+        self.ventanaDialogo.setLayout(self.vertical)
+
+        self.datosCorrectos = True
+
+    def accion_botonLimpiar(self):
+        self.nombreCompleto.setText(' ')
+        self.usuario.setText(' ')
+        self.password.setText(' ')
+        self.password2.setText(' ')
+        self.documento.setText(' ')
+        self.correo.setText(' ')
+        self.pregunta1.setText(' ')
+        self.respuesta1.setText(' ')
+        self.pregunta2.setText(' ')
+        self.respuesta2.setText(' ')
+        self.pregunta3.setText(' ')
+        self.respuesta3.setText(' ')
+
+
+    def accion_botonRegistrar(self):
+
+        if (
+            self.password.text() != self.password2.text()
+        ):
+            self.datosCorrectos = False
+
+            self.mensaje.setText("Los passwords no son iguales")
+
+            self.ventanaDialogo.exec_()
+
+        if (
+                self.nombreCompleto.text() == ""
+                or self.usuario.text() == ""
+                or self.password.text() == ""
+                or self.password2.text() == ""
+                or self.documento.text() == ""
+                or self.correo.text() == ""
+                or self.pregunta1.text() == ""
+                or self.respuesta1.text() == ""
+                or self.pregunta2.text() == ""
+                or self.respuesta2.text() == ""
+                or self.pregunta3.text() == ""
+                or self.respuesta3.text() == ""
+        ):
+            self.datosCorrectos = False
+
+            self.mensaje.setText("Debe ingresar todos los campos")
+
+            self.ventanaDialogo.exec_()
+
+        if self.datosCorrectos:
+
+            self.file = open('datos/clientes.txt', 'ab')
+
+            self.file.write(bytes(
+                self.nombreCompleto.text() + ";"
+                + self.usuario.text() + ";"
+                + self.password.text() + ";"
+                + self.password2.text() + ";"
+                + self.documento.text() + ";"
+                + self.correo.text() + ";"
+                + self.pregunta1.text() + ";"
+                + self.respuesta1.text() + ";"
+                + self.pregunta2.text() + ";"
+                + self.respuesta2.text() + ";"
+                + self.pregunta3.text() + ";"
+                + self.respuesta3.text() + "\n"
+                ,encoding='UTF-8'))
+
+            self.file.close()
+
+            self.file = open('datos/clientes.txt', 'rb')
+
+            while self.file:
+                linea = self.file.readline().decode('UTF-8')
+                print(linea)
+                if linea == '':
+                    break
+            self.file.close()
+
+    def accion_botonBuscar(self):
+
+        self.ventanaDialogo.setWindowTitle("Buscar preguntas de validación")
+
+        if(
+                self.documento.text() == ''
+        ):
+            self.datosCorrectos = False
+
+            self.mensaje.setText("Si va a buscar las preguntas"
+                                 " para recuperar la contraseña."
+                                 "\nDebe primero, ingresar el documento.")
+
+            self.ventanaDialogo.exec_()
+
+        if (
+                not self.documento.text().isnumeric()
+        ):
+            self.datosCorrectos = False
+
+            self.mensaje.setText("El documento debe ser númerico."
+                                 "\nNo ingrese letras "
+                                 "ni caracterés especiales.")
+
+            self.ventanaDialogo.exec_()
+
+            self.documento.setText('')
+
+        if (
+                self.datosCorrectos
+        ):
+            self.file = open('datos/clientes.txt', 'rb')
+
+            usuarios = []
+
+            while self.file:
+                linea = self.file.readline().decode('UTF-8')
+
+                lista = linea.split(";")
+
+                if linea == '':
+                    break
+
+                u = Cliente(
+                    lista[0],
+                    lista[1],
+                    lista[2],
+                    lista[3],
+                    lista[4],
+                    lista[5],
+                    lista[6],
+                    lista[7],
+                    lista[8],
+                    lista[9],
+                    lista[10],
+                )
+
+                usuarios.append(u)
+
+            self.file.close()
+
+            existeDocumento = False
+
+            for u in usuarios:
+
+                if u.documento == self.documento.text():
+
+                    self.pregunta1.setText(u.pregunta1)
+                    self.pregunta2.setText(u.pregunta2)
+                    self.pregunta3.setText(u.pregunta3)
+
+                    existeDocumento = True
+
+                    break
+
+            if (
+                    not existeDocumento
+            ):
+                self.mensaje.setText("No existe un usuario con este documento:\n"
+                                     + self.documento.text())
+
+                self.ventanaDialogo.exec_()
+
+
+
+
+
+
+
+
+
+>>>>>>> 8e129cff53de6231446064b162917196048f79bf
 if __name__ == '__main__':
 
     app = QApplication(sys.argv)
